@@ -1,6 +1,10 @@
 package team.projectpulse.system;
 
-public class StatusCode {
+public final class StatusCode {
+
+    private StatusCode() {
+        // Utility class; instances are not supported.
+    }
 
     public static final int SUCCESS = 200; // Success
 

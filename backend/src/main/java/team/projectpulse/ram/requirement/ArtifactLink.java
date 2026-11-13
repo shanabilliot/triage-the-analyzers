@@ -48,11 +48,6 @@ public class ArtifactLink {
     @ManyToOne
     @LastModifiedBy
     private PeerEvaluationUser updatedBy;
-
-
-    public ArtifactLink() {
-    }
-
     public Long getId() {
         return id;
     }

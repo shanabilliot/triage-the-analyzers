@@ -16,6 +16,7 @@ public class Result {
 
 
     public Result() {
+        // Retained as the public no-argument construction path.
     }
 
     public Result(boolean flag, Integer code, String message) {

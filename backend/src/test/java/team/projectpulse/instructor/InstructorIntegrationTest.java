@@ -21,6 +21,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -248,6 +249,35 @@ class InstructorIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.data.password").doesNotExist())
                 .andExpect(jsonPath("$.data.enabled").value(true))
                 .andExpect(jsonPath("$.data.roles").value("admin"));
+    }
+
+    @Test
+    void testAdminUpdateWithNullRolesPreservesInstructorRoleAndAllowsLogin() throws Exception {
+        Map<String, Object> instructorDto = new HashMap<>();
+        instructorDto.put("username", "b.gates@abc.edu");
+        instructorDto.put("firstName", "Bill");
+        instructorDto.put("lastName", "Gates");
+        instructorDto.put("email", "b.gates@abc.edu");
+        instructorDto.put("enabled", true);
+        instructorDto.put("roles", null);
+
+        String json = this.jsonMapper.writeValueAsString(instructorDto);
+        this.mockMvc.perform(put(this.baseUrl + "/instructors/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, this.adminBingyangToken));
+        ResultActions instructor = this.mockMvc.perform(get(this.baseUrl + "/instructors/2")
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, this.adminBingyangToken));
+        ResultActions login = this.mockMvc.perform(post(this.baseUrl + "/users/login")
+                .with(httpBasic("b.gates@abc.edu", "123456")));
+
+        assertAll(
+                () -> instructor.andExpect(jsonPath("$.data.roles").value("instructor")),
+                () -> login.andExpect(jsonPath("$.flag").value(true))
+                        .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                        .andExpect(jsonPath("$.data.userInfo.roles").value("instructor")));
     }
 
     @Test

@@ -1,5 +1,7 @@
 package team.projectpulse.evaluation;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PeerEvaluationAverage {
@@ -14,11 +16,6 @@ public class PeerEvaluationAverage {
     private List<String> publicComments;
     private List<String> privateComments;
     private List<RatingAverage> ratingAverages;
-
-
-    public PeerEvaluationAverage() {
-    }
-
     public Integer getStudentId() {
         return studentId;
     }
@@ -75,28 +72,37 @@ public class PeerEvaluationAverage {
         this.averageTotalScore = averageTotalScore;
     }
 
+    // Preserve the existing null-as-absent API behavior.
+    @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
     public List<String> getPublicComments() {
-        return publicComments;
+        return publicComments == null ? null
+                : Collections.unmodifiableList(new ArrayList<>(publicComments));
     }
 
     public void setPublicComments(List<String> publicComments) {
-        this.publicComments = publicComments;
+        this.publicComments = publicComments == null ? null : new ArrayList<>(publicComments);
     }
 
+    // Preserve the existing null-as-absent API behavior.
+    @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
     public List<String> getPrivateComments() {
-        return privateComments;
+        return privateComments == null ? null
+                : Collections.unmodifiableList(new ArrayList<>(privateComments));
     }
 
     public void setPrivateComments(List<String> privateComments) {
-        this.privateComments = privateComments;
+        this.privateComments = privateComments == null ? null : new ArrayList<>(privateComments);
     }
 
+    // Preserve the existing null-as-absent API behavior.
+    @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
     public List<RatingAverage> getRatingAverages() {
-        return ratingAverages;
+        return ratingAverages == null ? null
+                : Collections.unmodifiableList(new ArrayList<>(ratingAverages));
     }
 
     public void setRatingAverages(List<RatingAverage> ratingAverages) {
-        this.ratingAverages = ratingAverages;
+        this.ratingAverages = ratingAverages == null ? null : new ArrayList<>(ratingAverages);
     }
 
 }
