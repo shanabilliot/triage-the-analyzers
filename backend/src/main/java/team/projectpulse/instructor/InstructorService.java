@@ -115,7 +115,10 @@ public class InstructorService {
         // If the instructor is also an admin, then the instructor can update all the fields
         if (authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_admin"))) {
             oldInstructor.setEnabled(update.isEnabled());
-            oldInstructor.setRoles(update.getRoles());
+            // A null role on an admin update leaves the stored role unchanged.
+            if (update.getRoles() != null) {
+                oldInstructor.setRoles(update.getRoles());
+            }
         }
 
         return this.instructorRepository.save(oldInstructor);

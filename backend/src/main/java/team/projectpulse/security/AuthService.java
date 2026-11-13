@@ -8,6 +8,7 @@ import team.projectpulse.student.converter.StudentToStudentDtoConverter;
 import team.projectpulse.student.dto.StudentDto;
 import team.projectpulse.user.MyUserPrincipal;
 import team.projectpulse.user.PeerEvaluationUser;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -35,14 +36,19 @@ public class AuthService {
         PeerEvaluationUser peerEvaluationUser = principal.getPeerEvaluationUser();
 
         Map<String, Object> loginResultMap = new HashMap<>();
+        String roles = peerEvaluationUser.getRoles();
 
-        if (peerEvaluationUser.getRoles().equals("student")) {
+        if (roles == null) {
+            throw new AccessDeniedException("User account has no assigned role.");
+        }
+
+        if ("student".equals(roles)) {
             StudentDto studentDto = this.studentToStudentDtoConverter.convert((Student) peerEvaluationUser);
             // Create a JWT.
             String token = this.jwtProvider.createToken(authentication);
             loginResultMap.put("userInfo", studentDto);
             loginResultMap.put("token", token);
-        } else if (peerEvaluationUser.getRoles().contains("instructor")) {
+        } else if (roles.contains("instructor")) {
             InstructorDto instructorDto = this.instructorToInstructorDtoConverter.convert((Instructor) peerEvaluationUser);
             // Create a JWT.
             String token = this.jwtProvider.createToken(authentication);
