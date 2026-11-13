@@ -6,6 +6,9 @@ import team.projectpulse.ram.requirement.Priority;
 import team.projectpulse.user.dto.PeerEvaluationUserDto;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,4 +37,18 @@ public record UseCaseDto(
         PeerEvaluationUserDto updatedBy,
         Integer version,
         UseCaseLockDto lock) {
+    public UseCaseDto {
+        if (secondaryActorIds != null) {
+            secondaryActorIds = Collections.unmodifiableSet(new LinkedHashSet<>(secondaryActorIds));
+        }
+        if (preconditions != null) {
+            preconditions = Collections.unmodifiableSet(new LinkedHashSet<>(preconditions));
+        }
+        if (postconditions != null) {
+            postconditions = Collections.unmodifiableSet(new LinkedHashSet<>(postconditions));
+        }
+        if (mainSteps != null) {
+            mainSteps = Collections.unmodifiableList(new ArrayList<>(mainSteps));
+        }
+    }
 }

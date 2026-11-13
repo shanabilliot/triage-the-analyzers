@@ -11,6 +11,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,6 +53,7 @@ public class Section {
 
 
     public Section() {
+        // Required by JPA.
     }
 
     public Section(String sectionName,
@@ -104,12 +106,26 @@ public class Section {
         this.endDate = endDate;
     }
 
+    // Preserve the existing null-as-absent API behavior.
+    @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
     public List<String> getActiveWeeks() {
-        return activeWeeks;
+        return activeWeeks == null ? null
+                : Collections.unmodifiableList(new ArrayList<>(activeWeeks));
     }
 
     public void setActiveWeeks(List<String> activeWeeks) {
-        this.activeWeeks = activeWeeks;
+        if (activeWeeks == null) {
+            this.activeWeeks = null;
+            return;
+        }
+
+        List<String> copy = new ArrayList<>(activeWeeks);
+        if (this.activeWeeks == null) {
+            this.activeWeeks = copy;
+        } else {
+            this.activeWeeks.clear();
+            this.activeWeeks.addAll(copy);
+        }
     }
 
     public Rubric getRubric() {
@@ -125,8 +141,12 @@ public class Section {
     }
 
     public void addTeam(Team team) {
-        if (team == null) return;
-        if (!this.teams.contains(team)) this.teams.add(team);
+        if (team == null) {
+            return;
+        }
+        if (!this.teams.contains(team)) {
+            this.teams.add(team);
+        }
         team.setSection(this);
     }
 
@@ -139,8 +159,12 @@ public class Section {
     }
 
     public void addStudent(Student student) {
-        if (student == null) return;
-        if (!this.students.contains(student)) this.students.add(student);
+        if (student == null) {
+            return;
+        }
+        if (!this.students.contains(student)) {
+            this.students.add(student);
+        }
         student.setSection(this);
     }
 

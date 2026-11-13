@@ -71,11 +71,6 @@ public class UseCase {
 
     @Version
     private Integer version;
-
-
-    public UseCase() {
-    }
-
     /* ---------- Convenience helpers ---------- */
     public void addMainStep(UseCaseMainStep step) {
         mainSteps.add(step);

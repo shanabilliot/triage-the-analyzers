@@ -7,6 +7,7 @@ public class RatingAverage {
 
 
     public RatingAverage() {
+        // Retained as the public no-argument construction path.
     }
 
     public RatingAverage(Integer criterionId, Double averageScore) {

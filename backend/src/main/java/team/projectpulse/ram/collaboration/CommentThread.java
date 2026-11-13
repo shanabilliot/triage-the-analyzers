@@ -57,11 +57,6 @@ public class CommentThread {
     @ManyToOne
     @LastModifiedBy
     private PeerEvaluationUser updatedBy;
-
-
-    public CommentThread() {
-    }
-
     public void addComment(Comment comment) {
         comment.setCommentThread(this);
         this.comments.add(comment);
