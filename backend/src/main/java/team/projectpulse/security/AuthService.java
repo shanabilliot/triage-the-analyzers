@@ -1,5 +1,6 @@
 package team.projectpulse.security;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import team.projectpulse.instructor.Instructor;
 import team.projectpulse.instructor.converter.InstructorToInstructorDtoConverter;
 import team.projectpulse.instructor.dto.InstructorDto;
@@ -30,6 +31,7 @@ public class AuthService {
         this.instructorToInstructorDtoConverter = instructorToInstructorDtoConverter;
     }
 
+    @SuppressFBWarnings(value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE", justification = "AuthController invokes this only after HTTP Basic authentication; the sole UserDetailsService, UserService, wraps found accounts in MyUserPrincipal.")
     public Map<String, Object> createLoginInfo(Authentication authentication) {
         // Create user info.
         MyUserPrincipal principal = (MyUserPrincipal) authentication.getPrincipal();
